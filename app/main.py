@@ -2,8 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import Union
-from models.task import Task
-from models.user import User
+from app.db_models import User, Task
 
 app = FastAPI()
 
