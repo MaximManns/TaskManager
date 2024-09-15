@@ -1,1 +1,1 @@
-This is a TaskManager web application built using FastAPI, allowing users to manage their tasks efficiently. Users can create, read, update, and delete tasks (CRUD operations), and all data is stored in a MySQL database.
+This is a TaskManager web application built using FastAPI, allowing users to manage their tasks efficiently. Users can create, read, update, and delete tasks (CRUD operations).
