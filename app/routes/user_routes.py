@@ -1,11 +1,12 @@
-import app
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
 from app import db_models, schemas
-from app.main import get_db
+from app.dependencies import get_db
+
+router = APIRouter()
 
 
-@app.post("/users/", response_model=schemas.User)
+@router.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = db.query(db_models.User).filter(db_models.User.email == user.email).first()
     if db_user:
@@ -17,7 +18,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return new_user
 
 
-@app.get("/users/", response_model=list[schemas.User])
+@router.get("/users/", response_model=list[schemas.User])
 def read_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     users = db.query(db_models.User).offset(skip).limit(limit).all()
     return users
