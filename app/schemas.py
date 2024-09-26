@@ -7,13 +7,13 @@ class TaskBase(BaseModel):
 
 
 class TaskCreate(TaskBase):
-    owner_id: int
+    owner_email: str
 
 
 class Task(TaskBase):
     id: int
     title: str
-    owner_id: int
+    owner_email: int
 
     class Config:
         orm_mode = True
