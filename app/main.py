@@ -1,5 +1,5 @@
-from fastapi import FastAPI
 from app import db_models
+from fastapi import FastAPI
 from app.database import engine
 from app.routes.user_routes import router as user_router
 from app.routes.task_routes import router as task_router
