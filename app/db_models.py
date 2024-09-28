@@ -6,8 +6,9 @@ from app.database import Base
 class User(Base):
     __tablename__ = "User"
     id = Column(Integer, primary_key=True, index=True)
-    password = Column(String)
-    email = Column(String(50), unique=True, index=True)
+    email = Column(String, unique=True)
+    password = Column(String, unique=True)
+    name = Column(String, unique=True)
     task = relationship("Task", back_populates="owner")
 
 
@@ -16,5 +17,5 @@ class Task(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(30), index=True)
     description = Column(String(100), index=True)
-    owner_email = Column(String(50), ForeignKey("User.id"), unique=True)
+    owner_id = Column(Integer, ForeignKey("User.id"))
     owner = relationship("User", back_populates="task")

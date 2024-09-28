@@ -1,35 +1,37 @@
 from pydantic import BaseModel
 
 
+# Task
 class TaskBase(BaseModel):
     title: str
     description: str | None = None
 
 
 class TaskCreate(TaskBase):
-    owner_email: str
+    owner_id: int
 
 
 class Task(TaskBase):
     id: int
     title: str
-    owner_email: int
 
     class Config:
         orm_mode = True
 
 
+# User
 class UserBase(BaseModel):
     email: str
 
 
 class UserCreate(UserBase):
+    name: str
     password: str
 
 
 class User(UserBase):
     id: int
-    items: list[Task] = []
+    tasks: list[Task] | None = None
 
     class Config:
         orm_mode = True
