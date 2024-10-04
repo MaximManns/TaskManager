@@ -13,6 +13,7 @@ class TaskCreate(TaskBase):
 
 class Task(TaskBase):
     id: int
+    owner_id: int
     title: str
 
     class Config:
@@ -31,7 +32,7 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
-    tasks: list[Task] | None = None
+    task: list[Task] | None = None
 
     class Config:
         orm_mode = True
