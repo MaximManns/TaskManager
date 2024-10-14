@@ -1,7 +1,47 @@
-<form action="/create-task" method="POST">
-    <label for="title">Title:</label>
-    <input type="text" id="title" name="title">
-    <label for="description">Description:</label>
-    <input type="text" id="description" name="description">
-    <input type="submit" value="Create Task">
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+</head>
+<body>
+
+
+    <form action="/create-user" method="POST">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name">
+        <label for="password">Password:</label>
+        <input type="text" id="password" name="password">
+        <input type="submit" value="Create User">
+    </form>
+
+
+
+    <form action="/create-task" method="POST">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title">
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description">
+        <label for="owner_id">Onwer Id:</label>
+        <input type="text" id="owner_id" name="owner_id">
+        <input type="submit" value="Create Task">
+    </form>
+
+
+    <!-- Button to View User List -->
+    <h2>View Users</h2>
+    <form action="/users" method="GET">
+        <input type="submit" value="View User List">
+    </form>
+
+    <!-- Button to View Task List -->
+    <h2>View Tasks</h2>
+    <form action="/tasks" method="GET">
+        <input type="submit" value="View Task List">
+    </form>
+
+</body>
+</html>

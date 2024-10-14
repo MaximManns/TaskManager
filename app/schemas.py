@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 # Task
@@ -12,12 +12,11 @@ class TaskCreate(TaskBase):
 
 
 class Task(TaskBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     owner_id: int
     title: str
-
-    class Config:
-        orm_mode = True
 
 
 # User
@@ -31,8 +30,8 @@ class UserCreate(UserBase):
 
 
 class User(UserBase):
-    id: int
-    task: list[Task] | None = None
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        orm_mode = True
+    id: int
+    name: str
+    task: list[Task] | None = None

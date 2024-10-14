@@ -30,11 +30,11 @@ def read_tasks(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)) ->
     return tasks
 
 
-@router.delete("/tasks/{task_title}", response_model=schemas.Task)
+@router.delete("/tasks/{task_title}", response_model=dict)
 def delete_task(task_title: str, db: Session = Depends(get_db)):
     task = db.query(db_models.Task).filter(db_models.Task.title == task_title).first()
     if task is None:
         raise HTTPException(status_code=404, detail="Task not found")
     db.delete(task)
     db.commit()
-    return task
+    return {"ok": True}

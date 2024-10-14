@@ -9,5 +9,10 @@ db_models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 
+@app.get("/")
+def read_root():
+    return {"Welcome!": "To the Task Manager"}
+
+
 app.include_router(user_router, tags=["users"])
 app.include_router(task_router, tags=["tasks"])

@@ -2,6 +2,5 @@ app.sqlitedb
 pyproject.toml
 poetry.lock
 setup.cfg
-Fragestellungen.txt
 __pycache__/
 .env

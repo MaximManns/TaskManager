@@ -6,9 +6,9 @@ from app.database import Base
 class User(Base):
     __tablename__ = "User"
     id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, unique=True)
-    password = Column(String, unique=True)
-    name = Column(String, unique=True)
+    email = Column(String(30), unique=True)
+    password = Column(String(30), unique=True)
+    name = Column(String(30), unique=True)
     task = relationship("Task", back_populates="owner")
 
 
