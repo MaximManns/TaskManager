@@ -1,11 +1,11 @@
 from fastapi.testclient import TestClient
-
 from app.main import app
+
 
 client = TestClient(app)
 
-# User-Route Tests
 
+# User-Route Tests
 
 def test_read_existing_user():
     response = client.get("/users/{user_name}")
@@ -24,7 +24,7 @@ def test_read_non_existent_user():
     assert response.json() == {"detail": "No User with this name registered"}
 
 
-def test_create_user():
+def test_create_new_user():
     response = client.post("/users/", json={"email": "test1@example.com", "name": "testi", "password": "1test1"},)
     assert response.status_code == 200
     assert response.json() == {
@@ -32,6 +32,12 @@ def test_create_user():
         "name": "testi",
         "password": "1test1"
     }
+
+
+def test_create_existing_user():
+    response = client.post("/users/", json={"email": "test1@example.com", "name": "testi", "password": "1test1"},)
+    assert response.status_code == 400
+    assert response.json() == {"detail": "User with this name already registered"}
 
 
 def test_read_user_list():
@@ -56,7 +62,7 @@ def test_read_task_list():
     assert response.json() == expected_response
 
 
-def test_create_task():
+def test_create_new_task():
     response = client.post("/tasks/", json={"titke": "test1@example.com", "description": "testi", "owner_id": "1test1"},)
     assert response.status_code == 200
     assert response.json() == {
@@ -64,6 +70,18 @@ def test_create_task():
         "name": "testi",
         "password": "1test1"
     }
+
+
+def test_create__existing_task():
+    response = client.post("/tasks/", json={"titke": "test1@example.com", "description": "testi", "owner_id": "1test1"},)
+    assert response.status_code == 404
+    assert response.json() == {"detail: User not found"}
+
+
+def test_delete_existing_taks():
+    response = client.delete("/tasks/existing_task")
+    assert response.status_code == 200
+    assert response.json() == {"ok": True}
 
 
 def test_delete_non_existent_task():
