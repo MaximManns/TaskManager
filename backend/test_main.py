@@ -1,11 +1,6 @@
 from fastapi.testclient import TestClient
-<<<<<<< HEAD:backend/test_main.py
-
 from backend.main import app
-=======
-from app.main import app
->>>>>>> 2997d1073e26de5f7f78fd372792e3c6152c6854:app/test_main.py
-
+from http import HTTPStatus
 
 client = TestClient(app)
 
@@ -14,7 +9,7 @@ client = TestClient(app)
 
 def test_read_existing_user():
     response = client.get("/users/{user_name}")
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     expected_user = {
         "id": 1,
         "email": "user123@example.com",
@@ -25,13 +20,13 @@ def test_read_existing_user():
 
 def test_read_non_existent_user():
     response = client.get("/users/{user_name}")
-    assert response.status_code == 404
+    assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json() == {"detail": "No User with this name registered"}
 
 
 def test_create_new_user():
     response = client.post("/users/", json={"email": "test1@example.com", "name": "testi", "password": "1test1"},)
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert response.json() == {
         "email": "test1@example.com",
         "name": "testi",
@@ -41,13 +36,13 @@ def test_create_new_user():
 
 def test_create_existing_user():
     response = client.post("/users/", json={"email": "test1@example.com", "name": "testi", "password": "1test1"},)
-    assert response.status_code == 400
+    assert response.status_code == HTTPStatus.BAD_REQUEST
     assert response.json() == {"detail": "User with this name already registered"}
 
 
 def test_read_user_list():
     response = client.get("/users/")
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     expected_response = [
         {"id": 1, "email": "test1@example.com", "tasks": None},
         {"id": 2, "email": "test2@example.com", "tasks": None}
@@ -59,7 +54,7 @@ def test_read_user_list():
 
 def test_read_task_list():
     response = client.get("/tasks/")
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     expected_response = [
         {"id": 1, "ownwer_id": "3", "title": "TestTask1"},
         {"id": 2, "ownwer_id": "5", "title": "TestTask2"}
@@ -68,8 +63,8 @@ def test_read_task_list():
 
 
 def test_create_new_task():
-    response = client.post("/tasks/", json={"titke": "test1@example.com", "description": "testi", "owner_id": "1test1"},)
-    assert response.status_code == 200
+    response = client.post("/tasks/", json={"titke": "test1@example.com", "description": "testi", "owner_id": "1test1"})
+    assert response.status_code == HTTPStatus.OK
     assert response.json() == {
         "email": "test1@example.com",
         "name": "testi",
@@ -78,18 +73,18 @@ def test_create_new_task():
 
 
 def test_create__existing_task():
-    response = client.post("/tasks/", json={"titke": "test1@example.com", "description": "testi", "owner_id": "1test1"},)
-    assert response.status_code == 404
+    response = client.post("/tasks/", json={"titke": "test1@example.com", "description": "testi", "owner_id": "1test1"})
+    assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json() == {"detail: User not found"}
 
 
 def test_delete_existing_taks():
     response = client.delete("/tasks/existing_task")
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert response.json() == {"ok": True}
 
 
 def test_delete_non_existent_task():
     response = client.delete("/tasks/nonexistent_task")
-    assert response.status_code == 404
+    assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json() == {"detail": "Task not found"}
