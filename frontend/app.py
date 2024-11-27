@@ -1,6 +1,4 @@
 from flask import Flask, render_template, request
-from config import DEV_API_URL
-import requests
 import argparse
 import request_helper
 
@@ -27,16 +25,12 @@ def create_task():
     title = request.form['title']
     description = request.form['description']
     owner_id = request.form['owner_id']
-    data = {
+    json = {
         'title': title,
         'description': description,
         'owner_id': owner_id
     }
-    response = requests.post(f"{DEV_API_URL}/tasks/", json=data)
-    if response.status_code == 200:
-        return f"Task {title} has been created!"
-    else:
-        return f"Failed to create task. Error: {response.text}", response.status_code
+    return request_helper.post_request(json=json)
 
 
 @app.route('/create-user', methods=['POST'])
@@ -44,16 +38,12 @@ def create_user():
     email = request.form['email']
     name = request.form['name']
     password = request.form['password']
-    data = {
+    json = {
         'email': email,
         'name': name,
         'password': password
     }
-    response = requests.post(f"{DEV_API_URL}/users/", json=data)
-    if response.status_code == 200:
-        return f"User {name} has been created!"
-    else:
-        return f"Failed to create user. Error: {response.text}", response.status_code
+    return request_helper.post_request(json=json)
 
 
 @app.route('/delete-task/<int:task_id>', methods=['POST'])
