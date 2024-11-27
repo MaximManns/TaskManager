@@ -14,12 +14,12 @@ def index():
 
 @app.route('/tasks')
 def show_tasks():
-    request_helper.get_request(resource="tasks", template="tasks.html")
+    return request_helper.get_request(resource="tasks", template="tasks.html")
 
 
 @app.route('/users')
 def show_users():
-    request_helper.get_request(resource="users", template="users.html")
+    return request_helper.get_request(resource="users", template="users.html")
 
 
 @app.route('/create-task', methods=['POST'])
@@ -58,7 +58,7 @@ def create_user():
 
 @app.route('/delete-task/<int:task_id>', methods=['POST'])
 def delete_task(task_id):
-    request_helper.delete_request(resource="tasks", template="tasks.html", parameter={task_id})
+    return request_helper.delete_request(resource="tasks", template="tasks.html", parameter={task_id})
 
 
 if __name__ == '__main__':
