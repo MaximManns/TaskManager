@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from config import API_URL
+from config import DEV_API_URL
 import requests
 import argparse
 import request_helper
@@ -32,7 +32,7 @@ def create_task():
         'description': description,
         'owner_id': owner_id
     }
-    response = requests.post(f"{API_URL}/tasks/", json=data)
+    response = requests.post(f"{DEV_API_URL}/tasks/", json=data)
     if response.status_code == 200:
         return f"Task {title} has been created!"
     else:
@@ -49,7 +49,7 @@ def create_user():
         'name': name,
         'password': password
     }
-    response = requests.post(f"{API_URL}/users/", json=data)
+    response = requests.post(f"{DEV_API_URL}/users/", json=data)
     if response.status_code == 200:
         return f"User {name} has been created!"
     else:

@@ -1,6 +1,7 @@
 from backend import db_models
 from fastapi import FastAPI
 from backend.database import engine
+from datetime import datetime
 from backend.routes.user_routes import router as user_router
 from backend.routes.task_routes import router as task_router
 
@@ -11,7 +12,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"Welcome!": "To the Task Manager"}
+    return {"Date and time": datetime.now()}
 
 
 app.include_router(user_router, tags=["users"])

@@ -9,8 +9,9 @@ load_dotenv()
 DB_USERNAME = os.getenv("DB_USERNAME")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_NAME = os.getenv("DB_NAME")
+DEV_DB_SERVER_URL = os.getenv("DEV_DB_SERVER_URL")
 
-SQLALCHEMY_DATABASE_URL = f"mysql+pymysql://{DB_USERNAME}:{DB_PASSWORD}@localhost/{DB_NAME}"
+SQLALCHEMY_DATABASE_URL = f"mysql+pymysql://{DB_USERNAME}:{DB_PASSWORD}@{DEV_DB_SERVER_URL}/{DB_NAME}"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
