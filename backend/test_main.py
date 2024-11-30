@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from backend.main import app
+from backend.app import app
 from http import HTTPStatus
 
 client = TestClient(app)
