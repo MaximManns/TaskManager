@@ -14,11 +14,11 @@ def get_request(resource: str, template: str):
         return render_template(template, **{resource: json_response})
     except HTTPError:
         logger.error("Error in Api")
-        return render_template(template, resource=[])
+        return render_template("error.html")
 
     except json.JSONDecodeError:
         logger.error("Error while parsing API response")
-        return render_template(template, resource=[])
+        return render_template("error.html")
 
 
 def post_request(resource: str, template: str, json: dict):
@@ -30,10 +30,10 @@ def post_request(resource: str, template: str, json: dict):
         return render_template(template, **{resource: json_response})
     except HTTPError:
         logger.error("Error in Api")
-        return render_template(template, resource=[])
+        return render_template("error.html")
     except json.JSONDecodeError:
         logger.error("Error while parsing API response")
-        return render_template(template, resource=[])
+        return render_template("error.html")
 
 
 def delete_request(template: str, resource: str, parameter: str):
@@ -45,7 +45,7 @@ def delete_request(template: str, resource: str, parameter: str):
         return render_template(template, tasks=updated_tasks)
     except HTTPError:
         logger.error("Error in Api")
-        return render_template(template, resource=[])
+        return render_template("error.html")
     except json.JSONDecodeError:
         logger.error("Error while parsing API response")
-        return render_template(template, resource=[])
+        return render_template("error.html")
