@@ -1,5 +1,5 @@
 from requests.exceptions import HTTPError
-from flask import render_template, redirect
+from flask import render_template
 from fastapi.logger import logger
 from config import DEV_API_URL
 import requests
@@ -38,8 +38,11 @@ def post_request(resource: str, template: str, json: dict):
 
 def delete_request(template: str, resource: str, parameter: str):
     try:
-        requests.delete(f"{DEV_API_URL}/{resource}/{parameter}")
-        return redirect("/")
+        response = requests.delete(f"{DEV_API_URL}/{resource}/{parameter}")
+        response.raise_for_status()
+        updated_task_response = requests.get(f"{DEV_API_URL}/{resource}")
+        updated_tasks = updated_task_response.json()
+        return render_template(template, tasks=updated_tasks)
     except HTTPError:
         logger.error("Error in Api")
         return render_template(template, resource=[])

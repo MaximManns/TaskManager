@@ -30,11 +30,11 @@ def create_task(task: schemas.TaskCreate, db: Session = Depends(get_db)) -> Task
     return new_task
 
 
-@router.delete("/tasks/{owner_id}", response_model=dict)
-def delete_task(owner_id: int, db: Session = Depends(get_db)):
-    task = db.query(db_models.Task).filter(db_models.Task.owner_id == owner_id).first()
+@router.delete("/tasks/{task_id}", response_model=dict)
+def delete_task(task_id: int, db: Session = Depends(get_db)):
+    task = db.query(db_models.Task).filter(db_models.Task.id == task_id).first()
     if task is None:
         raise HTTPException(status_code=404, detail="Task not found")
     db.delete(task)
     db.commit()
-    return {"ok": True}
+    return {"detail": "Task deleted successfully"}
