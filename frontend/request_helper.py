@@ -9,35 +9,40 @@ import json
 def get_request(resource: str, template: str):
     try:
         response = requests.get(f"{DEV_API_URL}/{resource}")
-        tasks = response.json()
-        return render_template({template}, tasks=tasks)
+        response.raise_for_status()
+        json_response = response.json()
+        return render_template(template, **{resource: json_response})
     except HTTPError:
         logger.error("Error in Api")
-        return render_template(tasks=[])
+        return render_template(template, resource=[])
+
     except json.JSONDecodeError:
         logger.error("Error while parsing API response")
-        return render_template(tasks=[])
+        return render_template(template, resource=[])
 
 
-def post_request(json: json):
+def post_request(resource: str, template: str, json: dict):
     try:
-        response = requests.post(f"{DEV_API_URL}/users/", json)
-        return response.json()
+        response = requests.post(f"{DEV_API_URL}/{resource}", json=json)
+        response.raise_for_status()
+        response_get = requests.get(f"{DEV_API_URL}/{resource}")
+        json_response = response_get.json()
+        return render_template(template, **{resource: json_response})
     except HTTPError:
         logger.error("Error in Api")
-        return render_template(tasks=[])
+        return render_template(template, resource=[])
     except json.JSONDecodeError:
         logger.error("Error while parsing API response")
-        return render_template(tasks=[])
+        return render_template(template, resource=[])
 
 
-def delete_request(resource: str, parameter: str):
+def delete_request(template: str, resource: str, parameter: str):
     try:
         requests.delete(f"{DEV_API_URL}/{resource}/{parameter}")
-        return redirect('/tasks')
+        return redirect("/")
     except HTTPError:
         logger.error("Error in Api")
-        return render_template(users=[])
+        return render_template(template, resource=[])
     except json.JSONDecodeError:
         logger.error("Error while parsing API response")
-        return render_template(users=[])
+        return render_template(template, resource=[])

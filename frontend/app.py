@@ -30,7 +30,7 @@ def create_task():
         'description': description,
         'owner_id': owner_id
     }
-    return request_helper.post_request(json=json)
+    return request_helper.post_request(resource="tasks", template="tasks.html", json=json)
 
 
 @app.route('/create-user', methods=['POST'])
@@ -43,12 +43,12 @@ def create_user():
         'name': name,
         'password': password
     }
-    return request_helper.post_request(json=json)
+    return request_helper.post_request(resource="users", template="users.html", json=json)
 
 
 @app.route('/delete-task/<int:task_id>', methods=['POST'])
 def delete_task(task_id):
-    return request_helper.delete_request(resource="tasks", template="tasks.html", parameter={task_id})
+    return request_helper.delete_request(template="tasks.html", resource="tasks", parameter=task_id)
 
 
 if __name__ == '__main__':
