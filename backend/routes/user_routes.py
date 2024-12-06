@@ -9,17 +9,17 @@ import hashlib
 router = APIRouter()
 
 
-@router.get("/users/{user_name}", response_model=schemas.User)
-def get_spefific_user(user_name: str, db: Session = Depends(get_db)) -> User:
-    specific_user = db.query(db_models.User).filter(db_models.User.name == user_name).first()
+@router.get("/users/{user_id}", response_model=schemas.User)
+def get_spefific_user(user_id: int, db: Session = Depends(get_db)) -> User:
+    specific_user = db.query(db_models.User).filter(db_models.User.id == user_id).first()
     if not specific_user:
-        raise HTTPException(status_code=404, detail="No User with this name registered")
+        raise HTTPException(status_code=404, detail="No User with this id registered")
     return specific_user
 
 
 @router.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)) -> User:
-    db_user = db.query(db_models.User).filter(db_models.User.name == user.name).first()
+    db_user = db.query(db_models.User).filter(db_models.User.email == user.email).first()
     if db_user:
         raise HTTPException(status_code=400, detail="User with this name already registered")
     hashed_password = hashlib.new('sha256')
