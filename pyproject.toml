@@ -5,6 +5,10 @@ description = ""
 authors = ["Maxim"]
 readme = "README.md"
 package-mode = false
+packages = [
+    { include = "backend" },
+    { include = "frontend" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.12"
