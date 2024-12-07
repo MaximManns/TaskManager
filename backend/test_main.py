@@ -8,7 +8,7 @@ client = TestClient(app)
 # User-Route Tests
 
 def test_read_existing_user():
-    response = client.get("/users/{user_name}")
+    response = client.get("/users/user123")
     assert response.status_code == HTTPStatus.OK
     expected_user = {
         "id": 1,
@@ -19,19 +19,25 @@ def test_read_existing_user():
 
 
 def test_read_non_existent_user():
-    response = client.get("/users/{user_name}")
+    response = client.get("/users/non_existent_user")
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json() == {"detail": "No User with this name registered"}
 
 
 def test_create_new_user():
-    response = client.post("/users/", json={"email": "test1@example.com", "name": "testi", "password": "1test1"},)
+    response = client.post(
+        "/users/",
+        json={"email": "test1@example.com", "name": "testi", "password": "1test1"},
+    )
     assert response.status_code == HTTPStatus.OK
-    assert response.json() == {
+    created_user = response.json()
+    assert created_user == {
         "email": "test1@example.com",
         "name": "testi",
         "password": "1test1"
     }
+    delete_response = client.delete(f"/users/{created_user['id']}")
+    assert delete_response.status_code == HTTPStatus.NO_CONTENT
 
 
 def test_create_existing_user():
