@@ -1,10 +1,3 @@
-## Table of Contents
-1. [Installation](#installation)
-2. [How to Run](#how-to-run)
-3. [Database Setup](#database-setup)
-
----
-
 ## Installation
 
 1. Clone the repository:
