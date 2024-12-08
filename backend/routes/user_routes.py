@@ -1,5 +1,6 @@
 from backend import db_models
 from backend import schemas
+from sqlalchemy.exc import IntegrityError
 from fastapi import Depends, HTTPException, APIRouter, Response
 from sqlalchemy.orm import Session
 from backend.dependencies import get_db
@@ -22,15 +23,26 @@ def get_spefific_user(user_id: int, db: Session = Depends(get_db)) -> User:
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)) -> User:
     db_user = db.query(db_models.User).filter(db_models.User.email == user.email).first()
     if db_user:
-        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="User with this mail already registered")
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="User with this email already registered")
+
+    # Hash the password using SHA-256
     hashed_password = hashlib.new('sha256')
     hashed_password.update(str.encode(user.password))
-    hashed_password.hexdigest()
+    hashed_password = hashed_password.hexdigest()
+
     new_user = db_models.User(email=user.email, name=user.name, password=hashed_password)
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-    return new_user
+
+    try:
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        return new_user
+
+    except IntegrityError:
+        raise HTTPException(
+            status_code=HTTPStatus.CONFLICT,
+            detail="User with this email or name already exists"
+        )
 
 
 @router.get("/users/", response_model=list[schemas.User])
