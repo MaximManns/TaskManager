@@ -22,7 +22,7 @@ def get_spefific_user(user_id: int, db: Session = Depends(get_db)) -> User:
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)) -> User:
     db_user = db.query(db_models.User).filter(db_models.User.email == user.email).first()
     if db_user:
-        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="User with this name already registered")
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="User with this mail already registered")
     hashed_password = hashlib.new('sha256')
     hashed_password.update(str.encode(user.password))
     hashed_password.hexdigest()
