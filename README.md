@@ -40,5 +40,6 @@
 ## Database Setup
 
 1. Ensure that your MySQL database is running on `127.0.0.1:<port_number>`.
+   Replace <port_number> with your MySQL server's port number. The default is 3306.
 
 2. Create the `User` and `Task` tables using the SQL statements provided in the [Database Metadata](db_metadata.md) file.
