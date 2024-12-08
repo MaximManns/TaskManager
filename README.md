@@ -1,9 +1,51 @@
-How to run:
-Clone via HTTP or SSH.
-Add _.env_ by requesting it from me.
-Install poetry on your device and run _poetry install_ in the project terminal to get the dependencies from the toml-file.
-https://python-poetry.org/docs/ 
-After _poetry install_ you must active the new created venv.
-To run the FastAPI app, run _poetry run fastapi run backend/app.py_
-To run the Flask app, run _poetry run flask --app frontend.app run
-_
+## Table of Contents
+1. [Installation](#installation)
+2. [How to Run](#how-to-run)
+3. [Database Setup](#database-setup)
+
+---
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   # Using HTTPS:
+   git clone https://github.com/your-username/your-repository.git
+   # Using SSH:
+   git clone git@github.com:your-username/your-repository.git
+   ```
+
+2. Add the `.env` file by requesting it from me.
+
+3. [Install Poetry](https://python-poetry.org/docs/):
+   ```bash
+   curl -sSL https://install.python-poetry.org | python3 -
+   ```
+
+4. Install the required dependencies:
+   ```bash
+   poetry install
+   ```
+
+5. Activate the virtual environment created by Poetry:
+   ```bash
+   poetry shell
+   ```
+
+## Run Instructions
+
+1. To run the FastAPI app:
+   ```bash
+   poetry run python backend/app.py
+   ```
+
+2. To run the Flask app:
+   ```bash
+   poetry run flask --app frontend.app run
+   ```
+
+## Database Setup
+
+1. Ensure that your MySQL database is running on `127.0.0.1:<port_number>`.
+
+2. Create the `User` and `Task` tables using the SQL statements provided in the [Database Metadata](db_metadata.md) file.
