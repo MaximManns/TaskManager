@@ -46,9 +46,14 @@ def create_user():
     return request_helper.post_request(resource="users", template="users.html", json=json)
 
 
-@app.route('/delete-task/<int:task_id>', methods=['POST'])
+@app.route('/tasks/<int:task_id>', methods=['DELETE'])
 def delete_task(task_id):
     return request_helper.delete_request(template="tasks.html", resource="tasks", parameter=task_id)
+
+
+@app.route('/tasks/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    return request_helper.delete_request(template="users.html", resource="users", parameter=user_id)
 
 
 if __name__ == '__main__':
