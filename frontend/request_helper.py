@@ -42,7 +42,7 @@ def delete_request(template: str, resource: str, parameter: str):
         response.raise_for_status()
         updated_task_response = requests.get(f"{DEV_API_URL}/{resource}")
         updated_tasks = updated_task_response.json()
-        return render_template(template, tasks=updated_tasks)
+        return render_template(template, **{resource: updated_tasks})
     except HTTPError:
         logger.error("Error in Api")
         return render_template("error.html")
