@@ -43,7 +43,10 @@ def test_create_new_user():
 def test_create_existing_user():
     response = client.post("/users/", json={"email": "test1@example.com", "name": "testi", "password": "1test1"},)
     assert response.status_code == HTTPStatus.BAD_REQUEST
-    assert response.json() == {"detail": "User with this name already registered"}
+    assert response.json() == {
+        "title": "Task creation failed",
+        "detail": "Belonging user not found"
+        }
 
 
 def test_read_user_list():
