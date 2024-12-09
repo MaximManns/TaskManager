@@ -35,7 +35,7 @@ def test_create_new_user():
         "/users/",
         json={"email": unique_email, "name": "TestUser", "password": "MyTestPW"},
     )
-    assert response.status_code == HTTPStatus.CREATED
+
     created_user = response.json()
     assert response.status_code == HTTPStatus.CREATED
     assert "id" in created_user
