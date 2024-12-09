@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
 from backend.app import app
 from http import HTTPStatus
+import time
 
 client = TestClient(app)
 
@@ -25,17 +26,17 @@ def test_read_non_existent_user():
 
 
 def test_create_new_user():
+    unique_email = f"test_{int(time.time())}@example.com"
     response = client.post(
         "/users/",
-        json={"email": "test1@example.com", "name": "testi", "password": "1test1"},
+        json={"email": unique_email, "name": "TestUser", "password": "MyTestPW"},
     )
     assert response.status_code == HTTPStatus.OK
     created_user = response.json()
-    assert created_user == {
-        "email": "test1@example.com",
-        "name": "testi",
-        "password": "1test1"
-    }
+    assert created_user["email"] == unique_email
+    assert created_user["name"] == "TestUser"
+    assert created_user["password"] == "MyTestPW"
+
     delete_response = client.delete(f"/users/{created_user['id']}")
     assert delete_response.status_code == HTTPStatus.NO_CONTENT
 
@@ -72,17 +73,20 @@ def test_read_task_list():
 
 
 def test_create_new_task():
-    response = client.post("/tasks/", json={"titke": "test1@example.com", "description": "testi", "owner_id": "1test1"})
+    response = client.post("/tasks/", json={"title": "test1@example.com", "description": "ThisIsATestTask", "owner_id": "1"})
     assert response.status_code == HTTPStatus.OK
-    assert response.json() == {
+    created_task = response.json()
+    assert created_task == {
         "email": "test1@example.com",
-        "name": "testi",
-        "password": "1test1"
+        "name": "ThisIsATestTask",
+        "password": "1"
     }
+    delete_response = client.delete(f"/tasks/{created_task['id']}")
+    assert delete_response.status_code == HTTPStatus.NO_CONTENT
 
 
-def test_create__existing_task():
-    response = client.post("/tasks/", json={"titke": "test1@example.com", "description": "testi", "owner_id": "1test1"})
+def test_create_existing_task():
+    response = client.post("/tasks/", json={"title": "test1@example.com", "description": "testi", "owner_id": "1test1"})
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json() == {"detail: User not found"}
 
