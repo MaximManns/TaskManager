@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 from backend.app import app
 from http import HTTPStatus
-import time
+import uuid
 
 client = TestClient(app)
 
@@ -9,7 +9,7 @@ client = TestClient(app)
 # User-Route Tests
 
 def test_read_existing_user():
-    response = client.get("/users/user123")
+    response = client.get("/users/1")
     assert response.status_code == HTTPStatus.OK
     expected_user = {
         "id": 1,
@@ -20,23 +20,27 @@ def test_read_existing_user():
 
 
 def test_read_non_existent_user():
-    response = client.get("/users/non_existent_user")
+    non_existent_id = uuid.uuid4()
+    response = client.get(f"/users/{non_existent_id}")
     assert response.status_code == HTTPStatus.NOT_FOUND
-    assert response.json() == {"detail": "No User with this name registered"}
+    assert response.json() == {
+        "title": "Couldn't find user",
+        "detail": "No User with this name registered"
+    }
 
 
 def test_create_new_user():
-    unique_email = f"test_{int(time.time())}@example.com"
+    unique_email = f"test_{uuid.uuid4()}@example.com"
     response = client.post(
         "/users/",
         json={"email": unique_email, "name": "TestUser", "password": "MyTestPW"},
     )
-    assert response.status_code == HTTPStatus.OK
+    assert response.status_code == HTTPStatus.CREATED
     created_user = response.json()
+    assert response.status_code == HTTPStatus.CREATED
+    assert "id" in created_user
     assert created_user["email"] == unique_email
     assert created_user["name"] == "TestUser"
-    assert created_user["password"] == "MyTestPW"
-
     delete_response = client.delete(f"/users/{created_user['id']}")
     assert delete_response.status_code == HTTPStatus.NO_CONTENT
 
