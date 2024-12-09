@@ -7,6 +7,7 @@ import json
 
 
 def get_request(resource: str, template: str):
+    """Helper function for GET requests."""
     try:
         response = requests.get(f"{DEV_API_URL}/{resource}")
         response.raise_for_status()
@@ -22,6 +23,7 @@ def get_request(resource: str, template: str):
 
 
 def post_request(resource: str, template: str, json: dict):
+    """Helper function for POST requests."""
     try:
         response = requests.post(f"{DEV_API_URL}/{resource}", json=json)
         response.raise_for_status()
@@ -37,6 +39,7 @@ def post_request(resource: str, template: str, json: dict):
 
 
 def delete_request(template: str, resource: str, parameter: str):
+    """Helper function for DELETE requests."""
     try:
         response = requests.delete(f"{DEV_API_URL}/{resource}/{parameter}")
         response.raise_for_status()
