@@ -13,6 +13,7 @@ router = APIRouter()
 
 @router.get("/users/{user_id}", response_model=schemas.User)
 def get_spefific_user(user_id: int, db: Session = Depends(get_db)) -> User:
+    """Retrieve a specific user by their ID."""
     specific_user = db.query(db_models.User).filter(db_models.User.id == user_id).first()
     if not specific_user:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="No User with this id registered")
@@ -21,6 +22,7 @@ def get_spefific_user(user_id: int, db: Session = Depends(get_db)) -> User:
 
 @router.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)) -> User:
+    """Create a new user with a hashed password."""
     db_user = db.query(db_models.User).filter(db_models.User.email == user.email).first()
     if db_user:
         raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="User with this email already registered")
@@ -47,12 +49,14 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)) -> User
 
 @router.get("/users/", response_model=list[schemas.User])
 def get_list_of_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)) -> list:
+    """Retrieve a list of users."""
     users = db.query(db_models.User).offset(skip).limit(limit).all()
     return users
 
 
 @router.delete("/users/{user_id}")
 def delete_user(user_id: int, db: Session = Depends(get_db)):
+    """Delete a user by their ID."""
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="User not found")
