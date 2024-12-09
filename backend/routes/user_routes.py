@@ -57,7 +57,7 @@ def get_list_of_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_
 @router.delete("/users/{user_id}")
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     """Delete a user by their ID."""
-    user = db.query(User).filter(User.id == user_id).first()
+    user = db.query(db_models.User).filter(db_models.User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="User not found")
     db.delete(user)
