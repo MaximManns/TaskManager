@@ -36,11 +36,13 @@ def test_create_new_user():
         json={"email": unique_email, "name": "TestUser", "password": "MyTestPW"},
     )
 
-    created_user = response.json()
     assert response.status_code == HTTPStatus.CREATED
+    created_user = response.json()
     assert "id" in created_user
     assert created_user["email"] == unique_email
     assert created_user["name"] == "TestUser"
+    assert "password" not in created_user
+
     delete_response = client.delete(f"/users/{created_user['id']}")
     assert delete_response.status_code == HTTPStatus.NO_CONTENT
 
