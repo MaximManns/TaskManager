@@ -111,18 +111,53 @@ def test_create_new_task():
 
 
 def test_create_existing_task():
-    response = client.post("/tasks/", json={"title": "test1@example.com", "description": "testi", "owner_id": "1test1"})
-    assert response.status_code == HTTPStatus.NOT_FOUND
-    assert response.json() == {"detail: User not found"}
+    """Attempt to create an existing user"""
+    unique_owner_id = uuid.uuid4()
+    create_response = client.post(
+        "/tasks/",
+        json={"owner_id": unique_owner_id, "title": "TestTask", "description": "It's a test task"},
+    )
+
+    assert create_response.status_code == HTTPStatus.CREATED
+    created_task = create_response.json()
+    task_id = created_task["id"]
+
+    duplicate_response = client.post(
+        "/tasks/",
+        json={"owner_id": unique_owner_id, "title": "TestTask", "description": "It's a test task"},
+    )
+
+    assert duplicate_response.status_code == HTTPStatus.BAD_REQUEST
+    assert duplicate_response.json() == {
+        "title": "Task creation failed",
+        "detail": "Belonging task already exists",
+    }
+    delete_response = client.delete(f"/tasks/{task_id}")
+    assert delete_response.status_code == HTTPStatus.NO_CONTENT
 
 
-def test_delete_existing_taks():
-    response = client.delete("/tasks/existing_task")
-    assert response.status_code == HTTPStatus.OK
-    assert response.json() == {"ok": True}
+def test_delete_existing_task():
+    create_response = client.post("/tasks/", json={"name": "existing_task"})
+    assert create_response.status_code == HTTPStatus.CREATED
+
+    delete_response = client.delete("/tasks/existing_task")
+    assert delete_response.status_code == HTTPStatus.OK
+    assert delete_response.json() == {
+        "title": "Deletion was successful",
+        "detail": "The task has been deleted",
+    }
+
+    get_response = client.get("/tasks/existing_task")
+    assert get_response.status_code == HTTPStatus.NOT_FOUND
 
 
 def test_delete_non_existent_task():
-    response = client.delete("/tasks/nonexistent_task")
-    assert response.status_code == HTTPStatus.NOT_FOUND
-    assert response.json() == {"detail": "Task not found"}
+    get_response = client.get("/tasks/nonexistent_task")
+    assert get_response.status_code == HTTPStatus.NOT_FOUND
+
+    delete_response = client.delete("/tasks/nonexistent_task")
+    assert delete_response.status_code == HTTPStatus.NOT_FOUND
+    assert delete_response.json() == {
+        "title": "Deletion failed",
+        "detail": "Task couldn't be found",
+    }
