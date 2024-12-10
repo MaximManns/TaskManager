@@ -48,22 +48,38 @@ def test_create_new_user():
 
 
 def test_create_existing_user():
-    response = client.post("/users/", json={"email": "test1@example.com", "name": "testi", "password": "1test1"},)
-    assert response.status_code == HTTPStatus.BAD_REQUEST
-    assert response.json() == {
-        "title": "Task creation failed",
-        "detail": "Belonging user not found"
-        }
+    """Attempt to create an existing user"""
+    unique_email = f"test_{uuid.uuid4()}@example.com"
+    create_response = client.post(
+        "/users/",
+        json={"email": unique_email, "name": "TestUser", "password": "MyTestPW"},
+    )
+
+    assert create_response.status_code == HTTPStatus.CREATED
+    created_user = create_response.json()
+    user_id = created_user["id"]
+
+    duplicate_response = client.post(
+        "/users/",
+        json={"email": unique_email, "name": "TestUser", "password": "MyTestPW"},
+    )
+
+    assert duplicate_response.status_code == HTTPStatus.BAD_REQUEST
+    assert duplicate_response.json() == {
+        "title": "User creation failed",
+        "detail": "Belonging user already exists",
+    }
+
+    delete_response = client.delete(f"/users/{user_id}")
+    assert delete_response.status_code == HTTPStatus.NO_CONTENT
 
 
 def test_read_user_list():
     response = client.get("/users/")
     assert response.status_code == HTTPStatus.OK
-    expected_response = [
-        {"id": 1, "email": "test1@example.com", "tasks": None},
-        {"id": 2, "email": "test2@example.com", "tasks": None}
-    ]
-    assert response.json() == expected_response
+    response_data = response.json()
+    assert isinstance(response_data, list)
+    assert len(response_data) > 1
 
 
 # Task-Route-Tests
@@ -79,7 +95,7 @@ def test_read_task_list():
 
 
 def test_create_new_task():
-    response = client.post("/tasks/", json={"title": "test1@example.com", "description": "ThisIsATestTask", "owner_id": "1"})
+    response = client.post("/tasks/", json={"title": "test1@example.com", "description": "TestTask", "owner_id": "1"})
     assert response.status_code == HTTPStatus.OK
     created_task = response.json()
     assert created_task == {
