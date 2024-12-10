@@ -1,8 +1,9 @@
 from fastapi import FastAPI
-from backend.src import db_models
 from datetime import datetime
+from backend.src import db_models
 from backend.src.database import engine
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from backend.src.routes.user_routes import router as user_router
 from backend.src.routes.task_routes import router as task_router
 
@@ -19,6 +20,11 @@ app.add_middleware(
     allow_origins=origins,
     allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"]
+)
+
+app.add_middleware(
+    TrustedHostMiddleware,
+    allowed_hosts=["localhost", "127.0.0.1", "::1"],
 )
 
 
