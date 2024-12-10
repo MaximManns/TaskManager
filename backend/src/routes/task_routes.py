@@ -1,9 +1,9 @@
-from backend import db_models
-from backend import schemas
+from backend.src import db_models
+from backend.src import schemas
 from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
-from backend.dependencies import get_db
-from backend.schemas import Task
+from backend.src.dependencies import get_db
+from backend.src.schemas import Task
 from http import HTTPStatus
 
 router = APIRouter()

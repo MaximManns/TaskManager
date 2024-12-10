@@ -1,10 +1,10 @@
 from fastapi import FastAPI
-from backend import db_models
+from backend.src import db_models
 from datetime import datetime
-from backend.database import engine
+from backend.src.database import engine
 from fastapi.middleware.cors import CORSMiddleware
-from backend.routes.user_routes import router as user_router
-from backend.routes.task_routes import router as task_router
+from backend.src.routes.user_routes import router as user_router
+from backend.src.routes.task_routes import router as task_router
 
 db_models.Base.metadata.create_all(bind=engine)
 

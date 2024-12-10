@@ -1,10 +1,10 @@
-from backend import db_models
-from backend import schemas
+from backend.src import db_models
+from backend.src import schemas
 from sqlalchemy.exc import IntegrityError
 from fastapi import Depends, HTTPException, APIRouter, Response
 from sqlalchemy.orm import Session
-from backend.dependencies import get_db
-from backend.schemas import User
+from backend.src.dependencies import get_db
+from backend.src.schemas import User
 from http import HTTPStatus
 import hashlib
 
