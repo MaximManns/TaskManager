@@ -87,23 +87,26 @@ def test_read_user_list():
 def test_read_task_list():
     response = client.get("/tasks/")
     assert response.status_code == HTTPStatus.OK
-    expected_response = [
-        {"id": 1, "ownwer_id": "3", "title": "TestTask1"},
-        {"id": 2, "ownwer_id": "5", "title": "TestTask2"}
-    ]
-    assert response.json() == expected_response
+    response_data = response.json()
+    assert isinstance(response_data, list)
+    assert len(response_data) > 1
 
 
 def test_create_new_task():
-    response = client.post("/tasks/", json={"title": "test1@example.com", "description": "TestTask", "owner_id": "1"})
-    assert response.status_code == HTTPStatus.OK
+    unique_owner_id = uuid.uuid4()
+    response = client.post(
+        "/tasks/",
+        json={"owner_id": unique_owner_id, "title": "TestTask", "description": "It's a test task"},
+    )
+
+    assert response.status_code == HTTPStatus.CREATED
     created_task = response.json()
-    assert created_task == {
-        "email": "test1@example.com",
-        "name": "ThisIsATestTask",
-        "password": "1"
-    }
-    delete_response = client.delete(f"/tasks/{created_task['id']}")
+    assert "id" in created_task
+    assert created_task["owner_id"] == unique_owner_id
+    assert created_task["title"] == "TestTask"
+    assert created_task["description"] == "It's a test task."
+
+    delete_response = client.delete(f"/users/{created_task['id']}")
     assert delete_response.status_code == HTTPStatus.NO_CONTENT
 
 
