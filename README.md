@@ -29,12 +29,12 @@
 
 1. To run the FastAPI app:
    ```bash
-   poetry run python backend/app.py
+   python backend/app.py
    ```
 
 2. To run the Flask app:
    ```bash
-   poetry run flask --app frontend.app run
+   flask --app frontend.app run
    ```
 
 ## Database Setup
