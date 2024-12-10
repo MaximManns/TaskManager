@@ -3,20 +3,19 @@
 ```sql
 CREATE TABLE `User` (
     `id` int NOT NULL AUTO_INCREMENT,
-    `email` varchar(30) DEFAULT NULL,
-    `password` varchar(30) DEFAULT NULL,
-    `name` varchar(30) DEFAULT NULL,
+    `email` varchar(30) DEFAULT NOT NULL,
+    `password` varchar(30) DEFAULT NOT NULL,
+    `name` varchar(30) DEFAULT NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `email` (`email`),
-    UNIQUE KEY `password` (`password`),
+    KEY `password` (`password`),
     UNIQUE KEY `name` (`name`),
     KEY `ix_User_id` (`id`)
 )
 
-```sql
 CREATE TABLE `Task` (
     `id` int NOT NULL AUTO_INCREMENT,
-    `title` varchar(30) DEFAULT NULL,
+    `title` varchar(30) DEFAULT NOT NULL,
     `description` varchar(100) DEFAULT NULL,
     `owner_id` int DEFAULT NULL,
     PRIMARY KEY (`id`),
