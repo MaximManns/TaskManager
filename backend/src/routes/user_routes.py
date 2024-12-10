@@ -22,7 +22,12 @@ def get_spefific_user(user_id: int, db: Session = Depends(get_db)) -> User:
 
 @router.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)) -> User:
-    """Create a new user with a hashed password."""
+    if not (4 <= len(user.password) <= 20):
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            title="Invalid password",
+            detail="Password must be between 4 and 20 characters long"
+        )
     db_user = db.query(db_models.User).filter(db_models.User.email == user.email).first()
     if db_user:
         raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="User with this email already registered")
