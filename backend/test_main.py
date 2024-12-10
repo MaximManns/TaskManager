@@ -82,7 +82,41 @@ def test_read_user_list():
     assert len(response_data) > 1
 
 
+def test_delete_existing_user():
+    unique_email = f"test_{uuid.uuid4()}@example.com"
+    response = client.post(
+        "/users/",
+        json={"email": unique_email, "name": "TestUser", "password": "MyTestPW"},
+    )
+    assert response.status_code == HTTPStatus.CREATED
+    created_user = response.json()
+    user_id = created_user["id"]
+
+    delete_response = client.delete(f"/users/{user_id}")
+    assert delete_response.status_code == HTTPStatus.OK
+    assert delete_response.json() == {
+        "title": "Deletion was successful",
+        "detail": "The user has been deleted",
+    }
+
+    get_response = client.get(f"/users/{user_id}")
+    assert get_response.status_code == HTTPStatus.NOT_FOUND
+
+
+def test_delete_non_existent_user():
+    unique_user_id = uuid.uuid4()
+    get_response = client.get(f"/users/{unique_user_id}")
+    assert get_response.status_code == HTTPStatus.NOT_FOUND
+
+    delete_response = client.delete(f"/users/{unique_user_id}")
+    assert delete_response.status_code == HTTPStatus.NOT_FOUND
+    assert delete_response.json() == {
+        "title": "Deletion failed",
+        "detail": "User couldn't be found",
+    }
+
 # Task-Route-Tests
+
 
 def test_read_task_list():
     response = client.get("/tasks/")
@@ -137,7 +171,11 @@ def test_create_existing_task():
 
 
 def test_delete_existing_task():
-    create_response = client.post("/tasks/", json={"name": "existing_task"})
+    unique_owner_id = uuid.uuid4()
+    create_response = client.post(
+        "/tasks/",
+        json={"owner_id": unique_owner_id, "title": "TestTask", "description": "It's a test task"},
+    )
     assert create_response.status_code == HTTPStatus.CREATED
 
     delete_response = client.delete("/tasks/existing_task")
@@ -152,10 +190,11 @@ def test_delete_existing_task():
 
 
 def test_delete_non_existent_task():
-    get_response = client.get("/tasks/nonexistent_task")
+    unique_task_id = uuid.uuid4()
+    get_response = client.get(f"/tasks/{unique_task_id}")
     assert get_response.status_code == HTTPStatus.NOT_FOUND
 
-    delete_response = client.delete("/tasks/nonexistent_task")
+    delete_response = client.delete(f"/tasks/{unique_task_id}")
     assert delete_response.status_code == HTTPStatus.NOT_FOUND
     assert delete_response.json() == {
         "title": "Deletion failed",
